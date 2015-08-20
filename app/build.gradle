@@ -1,0 +1,32 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
+
+    defaultConfig {
+        applicationId "com.pgmacdesign.smsverification"
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    //GSON, for managing JSON de/serialization. Check link here for details: https://github.com/google/gson
+    compile files('src/main/libs/gson-2.3.1.jar')
+    //App compat library (For V7 calls)
+    compile "com.android.support:appcompat-v7:22.1.1"
+    //Volley
+    compile 'com.mcxiaoke.volley:library-aar:1.0.0'
+
+}
