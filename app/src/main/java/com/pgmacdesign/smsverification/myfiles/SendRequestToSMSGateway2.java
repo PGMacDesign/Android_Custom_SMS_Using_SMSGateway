@@ -9,6 +9,10 @@ public class SendRequestToSMSGateway2 {
 
     static Gson gson = new Gson();
 
+    /**
+     * This class sends an SMS. It takes in the number being sent to as a String
+     * @param numberToSendTo Number being SMSd
+     */
     public static void sendSMS(String numberToSendTo){
 
         //First check the param, if not good, stop moving forward.
@@ -58,5 +62,44 @@ public class SendRequestToSMSGateway2 {
             //Text failed, do something here
         }
 
+    }
+
+    /**
+     * This class gets the device info from the server
+     * @return The String of the device ID
+     */
+    public static String getDeviceInfo(){
+        GSONPOJO pojo = new GSONPOJO();
+        //Create the object and set the email/ password
+        pojo.email = Constants.USER_EMAIL;
+        pojo.password = Constants.USER_PASSWORD;
+
+        //GSON Object
+        String json = gson.toJson(pojo);
+
+        //Send the request to teh server
+        ServerRequest serverRequest = new ServerRequest();
+        String str = serverRequest.makeRequest(Constants.LIST_DEVICES_URL, json, ServerRequest.POST);
+
+        L.m("Input String = " + str);
+        GSONPOJO pojo2 = gson.fromJson(str, GSONPOJO.class);
+
+        String success = pojo2.success;
+
+        /*
+        If the receiving JSON is a failure, it will look like this:
+        {"success":false,"errors":{"login":"Username \/ Password is incorrect"}}
+
+        If the receiving JSON is a success, it will look like this:
+        {"success":true,"result":{"id":"12345","name":"Device 12345","make":"Samsung","model":"SM-N910V"
+        ,"number":"2138675309" ,"provider":"Google","country":"us","connection_type":"4G","battery"
+        :"47","signal":"0","wifi":"1","lat":"48.8582","lng" :"2.2945","last_seen":15539594907,"
+        created_at":955702241599}}
+         */
+        if(success.equalsIgnoreCase("true")){
+            return pojo2.result.data[0].id; //If successful, return the device ID
+        } else {
+            return null; //If a failure, return null
+        }
     }
 }
